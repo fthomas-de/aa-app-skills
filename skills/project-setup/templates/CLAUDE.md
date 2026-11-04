@@ -29,7 +29,9 @@ python manage.py collectstatic --noinput
 
 `aa-test` wraps `manage.py test` and drops the DEBUG/INFO lines Alliance
 Auth's console logging adds, nothing else - a real traceback, `WARNING` or
-`ERROR` still comes through. It keeps the test database (`--keepdb`);
+`ERROR` still comes through. It uses a test database of its own per project (`test_<repo name>`, via
+`EOS_TEST_DB`; set it yourself for a second session in the same project) and
+keeps it (`--keepdb`);
 `--fresh` rebuilds it, and the suite at `/commit` always runs fresh. No
 `--parallel`: with `--keepdb` it saves little, does not migrate its clone
 databases and hangs on a failing subtest.

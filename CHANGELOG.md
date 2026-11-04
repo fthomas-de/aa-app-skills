@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   `pip install git+...@v<version>` works; an existing tag stops it.
 - `aa-test`, the quiet test runner the `## Release` blocks call, configurable
   through `AA_INSTANCE` and `AA_PYTHON`. Returns the exit code of the test
-  run rather than of the log filter.
+  run rather than of the log filter. Each project gets its own test database
+  (`test_<repo name>` through `EOS_TEST_DB`), so parallel runs in different
+  projects do not interrupt each other.
 - Templates for `CLAUDE.md`, `CHANGELOG.md`, `docs/HANDOVER.md` and the
   `## AA environment` block.

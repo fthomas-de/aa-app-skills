@@ -20,10 +20,15 @@
 #   AA_INSTANCE  directory with manage.py  (default ~/aa-dev/working/myauth)
 #   AA_PYTHON    Python of the AA venv     (default ~/aa-dev/venv/bin/python)
 #
+# Each project gets its own test database (test_<repo name>, via EOS_TEST_DB,
+# which the instance's settings read), so runs in different projects never
+# rebuild or clone each other's. An EOS_TEST_DB already set wins - use it for
+# a second session in the same project.
+#
 # --keepdb by default: building the test database runs every migration of the
 # whole instance - on MySQL 70 to 100 seconds per run, against a few seconds
-# for one module's tests. All apps of the instance share that schema, so one
-# kept database serves every app. Django still applies a new migration to a
+# for one module's tests, so the first run in a project builds it, later ones
+# reuse it. Django still applies a new migration to a
 # kept database; what it cannot see is a migration rewritten after it was
 # applied, another branch's schema, or a new migration in --parallel clones.
 # --fresh rebuilds it; the suite at /commit runs with it.
@@ -34,6 +39,10 @@ python="${AA_PYTHON:-$HOME/aa-dev/venv/bin/python}"
 if [ "$#" -eq 0 ]; then
     echo "usage: aa-test <app or test label> [--fresh] [manage.py test args...]" >&2
     exit 2
+fi
+if [ -z "${EOS_TEST_DB:-}" ]; then
+    project="$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")"
+    export EOS_TEST_DB="test_${project//-/_}"
 fi
 cd "$instance" || { echo "aa-test: AA_INSTANCE '$instance' not found" >&2; exit 2; }
 
