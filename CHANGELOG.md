@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   taken over from a personal setup and made machine-independent: paths,
   WSL use and the database rule now come from a `## AA environment` block in
   `~/.claude/CLAUDE.md` instead of being written into the skills.
+- `/push` tags the release commit `v<version>` ("Release <version>") and
+  pushes the branch and that one tag together, so the READMEs'
+  `pip install git+...@v<version>` works; an existing tag stops it.
 - `aa-test`, the quiet test runner the `## Release` blocks call, configurable
   through `AA_INSTANCE` and `AA_PYTHON`. Returns the exit code of the test
   run rather than of the log filter.

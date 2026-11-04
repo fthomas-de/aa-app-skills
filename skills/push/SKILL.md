@@ -3,7 +3,8 @@ name: push
 description: >
   Publishes the committed state of an Alliance Auth / Django app: bump the
   version (default +0.0.1), split the CHANGELOG onto it, update
-  docs/HANDOVER.md for a fresh session, release commit, then push - without
+  docs/HANDOVER.md for a fresh session, release commit and tag v<version>,
+  then push branch and tag - without
   asking when nothing stood out, otherwise ask first. Expects the work to be
   committed with /commit. Reads everything app-specific from "## Release" in
   the app's CLAUDE.md and everything machine-specific from
@@ -73,28 +74,40 @@ Write tool to `<repo>/.git/CLAUDE_COMMIT_MSG`, then
 `Release <version>`, ending with the attribution line from the session's
 system context, if there is one.
 
+Then tag that commit, so `pip install git+...@v<version>` works:
+
+- The tag `v<version>` must not exist yet: `git rev-parse -q --verify
+  refs/tags/v<version>` (must print nothing) and `git ls-remote --tags origin
+  refs/tags/v<version>` (must print nothing). If it exists in either place,
+  do not move, delete or overwrite it - show where it points and ask.
+- `git tag -a v<version> -m "Release <version>"` on the release commit.
+
 ## 5 · Push
 
 First compare with the remote: `git fetch`, then
 `git rev-list --count HEAD..@{u}` (must be 0) and `git ls-remote origin
 <branch>` against `git rev-parse @{u}` (must match - a release can have been
-left behind locally).
+left behind locally). `git ls-remote --tags origin refs/tags/v<version>`
+must still print nothing; locally `v<version>` must point at the release
+commit (`git rev-parse v<version>^{commit}` equals `git rev-parse HEAD`).
 
 **Push without asking** when all of this holds:
 
 - Step 0 found no uncommitted code changes and no empty commit list.
 - Step 2 did not have to ask (the running section had entries).
-- The release commit went through.
-- The remote is not ahead of `@{u}`, and both comparisons above match.
+- The release commit and the tag went through.
+- The remote is not ahead of `@{u}`, all comparisons above match, and the
+  tag is not on the remote yet.
 - Nothing else in this run raised a question, an error or a surprise.
 
-Then `git push` - never `--force` - and say in the summary that it was
-pushed without asking.
+Then push the branch and this one tag together:
+`git push origin <branch> v<version>` - never `--tags`, never `--force` - and
+say in the summary that it was pushed without asking.
 
 **Otherwise ask first** and wait for a yes, naming what stood out:
 
-> Push `<branch>` to `<remote>`: version <old> → <new>, <n> commits
-> (<subjects, short>). Stood out: <what>. Push anyway?
+> Push `<branch>` and tag `v<version>` to `<remote>`: version <old> → <new>,
+> <n> commits (<subjects, short>). Stood out: <what>. Push anyway?
 
 If the push fails (the remote is ahead), do not rebase or merge - show the
 situation and ask.
@@ -103,7 +116,8 @@ situation and ask.
 
 Short, about six lines at most:
 
-- version old → new, branch, remote, hash of the release commit
+- version old → new, branch, remote, hash of the release commit, tag
+  `v<version>` (pushed or not)
 - pushed commits (count, subjects)
 - what the CHANGELOG lists under the version (keywords)
 - what HANDOVER.md names as next steps
