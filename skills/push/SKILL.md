@@ -70,7 +70,10 @@ Lasting rules belong in `CLAUDE.md`, not here.
 
 Stage version, CHANGELOG and HANDOVER by path. Write the message with the
 Write tool to `<repo>/.git/CLAUDE_COMMIT_MSG`, then
-`git commit -F .git/CLAUDE_COMMIT_MSG` - never through a heredoc. Subject
+`git commit -F .git/CLAUDE_COMMIT_MSG && rm .git/CLAUDE_COMMIT_MSG` - never
+through a heredoc. Commit only after the Write succeeded, in a later message;
+if it fails ("File has not been read yet"), read the file and write again
+first, or git commits the stale message. Subject
 `Release <version>`, ending with the attribution line from the session's
 system context, if there is one.
 

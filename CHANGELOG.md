@@ -23,3 +23,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   projects do not interrupt each other.
 - Templates for `CLAUDE.md`, `CHANGELOG.md`, `docs/HANDOVER.md` and the
   `## AA environment` block.
+
+### Fixed
+
+- `/commit` and `/push` delete `.git/CLAUDE_COMMIT_MSG` after a successful
+  commit and commit only once the Write succeeded. A leftover file made the
+  Write fail ("File has not been read yet") and git committed the previous
+  message.

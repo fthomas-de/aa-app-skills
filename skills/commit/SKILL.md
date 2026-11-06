@@ -77,9 +77,13 @@ ran them, or there are none). Failure as in step 1: fix, report, ask.
 2. Stage files by path (`git add <paths>`), no blind `git add -A`.
 3. Write the commit message with the **Write tool** to
    `<repo>/.git/CLAUDE_COMMIT_MSG` (through the file path from
-   `## AA environment`), then `git commit -F .git/CLAUDE_COMMIT_MSG`.
+   `## AA environment`), then `git commit -F .git/CLAUDE_COMMIT_MSG &&
+   rm .git/CLAUDE_COMMIT_MSG`.
    **Never through a heredoc** - apostrophes and brackets have cut a message
-   off mid-sentence before.
+   off mid-sentence before. Run the commit only after the Write succeeded, in
+   a later message - never in the same one. If the Write fails ("File has not
+   been read yet": a leftover from an aborted run), read the file, write
+   again, then commit; otherwise git commits the stale message.
 4. Message: English, one subject line in the style of `git log --oneline -5`,
    below it briefly the why. End with the attribution line from the current
    session's system context, if there is one.
