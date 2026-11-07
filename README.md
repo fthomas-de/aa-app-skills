@@ -1,13 +1,13 @@
 # aa-app-skills
 
 Claude Code skills for developing [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
-apps: a checked commit, a release with version bump and handover, and a
+apps: a checked and versioned commit, a release with handover, and a
 one-time project setup that makes both work.
 
 | Skill | What it does |
 |---|---|
-| `/commit` | Test suite without translation tests, checks, translations if texts changed, translation tests, then a local commit. No version bump, no push. |
-| `/push` | Version +0.0.1 (or the one you name), split `CHANGELOG.md` onto it, update `docs/HANDOVER.md` for the next session, release commit, tag `v<version>`, push of branch and tag. Pushes without asking only when nothing stood out. |
+| `/commit` | Test suite without translation tests, checks, translations if texts changed, translation tests, version +0.0.1 (or the one you name) with `CHANGELOG.md` split onto it, then a local commit. No push. |
+| `/push` | Update `docs/HANDOVER.md` for the next session, release commit, tag `v<version>` with the version `/commit` set, push of branch and tag. Pushes without asking only when nothing stood out. |
 | `/project-setup` | Sets up the machine once (`## AA environment`, `aa-test`) and each app (`CLAUDE.md` with `## Release`, `CHANGELOG.md`, `docs/HANDOVER.md`, tagged translation tests, installed into the dev instance). |
 
 All three run only when you type them (`disable-model-invocation: true`).

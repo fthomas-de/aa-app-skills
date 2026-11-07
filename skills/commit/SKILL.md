@@ -3,8 +3,8 @@ name: commit
 description: >
   Commits the current state of an Alliance Auth / Django app once it checks
   out: test suite without translation tests, checks, translations if needed,
-  translation tests, then a local commit. No version bump, no push - that is
-  /push. Reads everything app-specific from the "## Release" block of the
+  translation tests, version bump (default +0.0.1) with the CHANGELOG split
+  onto it, then a local commit. No push - that is /push. Reads everything app-specific from the "## Release" block of the
   app's CLAUDE.md and everything machine-specific from "## AA environment".
   Only on an explicit /commit.
 disable-model-invocation: true
@@ -12,8 +12,9 @@ disable-model-invocation: true
 
 # Commit
 
-One checked local commit of the current state. **No version bump, no
-CHANGELOG split, no push** - all of that belongs to `/push`.
+One checked local commit of the current state, and every commit is a new
+version: it bumps the version and moves the running CHANGELOG entries onto
+it. **No push, no handover, no tag** - those belong to `/push`.
 
 Talk to the user in their language; commit messages stay English.
 
@@ -26,7 +27,7 @@ Two blocks drive this skill:
   reach files. Usually in `~/.claude/CLAUDE.md` and therefore already in
   context; a project's `CLAUDE.local.md` may override it.
 - **`## Release`** in the project's `CLAUDE.md` - the app: commands for
-  tests, checks and translations. If the file is not in context yet, read
+  version file, changelog section, tests, checks and translations. If the file is not in context yet, read
   only that section (`grep -n "^## Release" -A 25 CLAUDE.md`).
 
 If either block is missing, stop and suggest `/project-setup` - do not guess.
@@ -70,10 +71,25 @@ points to). In general:
 Run the line `Translation tests` (skip it when the tool from step 2 already
 ran them, or there are none). Failure as in step 1: fix, report, ask.
 
-## 4 · Commit
+## 4 · Version and CHANGELOG
 
-1. Look at `git status -s`. Does the list match the work? Do not take
-   unknown untracked files along unasked - ask.
+The file named by `Version file`:
+
+- If the user names a version ("make it 0.4.0"), set exactly that.
+- Otherwise check whether it was already changed since the last commit
+  (`git diff HEAD -- <file>`). If not: patch level +1 (0.3.7 → 0.3.8).
+
+Then move the contents of the section named by `Changelog section` into a
+new section `## [<version>] - <today's date>` below it; the running section
+stays behind, empty. Do not reword anything, only sort it in. If the section
+is empty, propose entries from the diff and ask before writing them.
+
+Both files go into the commit below.
+
+## 5 · Commit
+
+1. Look at `git status -s`. Does the list match the work (plus version file
+   and CHANGELOG)? Do not take unknown untracked files along unasked - ask.
 2. Stage files by path (`git add <paths>`), no blind `git add -A`.
 3. Write the commit message with the **Write tool** to
    `<repo>/.git/CLAUDE_COMMIT_MSG` (through the file path from
@@ -89,13 +105,13 @@ ran them, or there are none). Failure as in step 1: fix, report, ask.
    session's system context, if there is one.
 5. Check `git log -1 --format="%h %s"`.
 
-## 5 · Summary
+## 6 · Summary
 
 Short, about six lines at most:
 
-- commit hash and subject
+- commit hash and subject, version old → new
 - tests: X passed (without translation tests), checks ok, translation tests
   Y passed / not applicable
 - translated: yes (which texts) / not needed
 - what was fixed along the way, if anything
-- note: version and push follow with `/push`
+- note: handover, tag and push follow with `/push`

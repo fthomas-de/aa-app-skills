@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `/push` tags the release commit `v<version>` ("Release <version>") and
   pushes the branch and that one tag together, so the READMEs'
   `pip install git+...@v<version>` works; an existing tag stops it.
+- Every `/commit` bumps the version (default +0.0.1) and moves the running
+  CHANGELOG entries onto it; `/push` no longer does either and tags the
+  version at HEAD.
 - `aa-test`, the quiet test runner the `## Release` blocks call, configurable
   through `AA_INSTANCE` and `AA_PYTHON`. Returns the exit code of the test
   run rather than of the log filter. Each project gets its own test database
