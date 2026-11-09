@@ -114,4 +114,7 @@ Short, about six lines at most:
   Y passed / not applicable
 - translated: yes (which texts) / not needed
 - what was fixed along the way, if anything
-- note: handover, tag and push follow with `/push`
+
+Then propose the next step directly: ask whether to publish now with
+`/push` (handover, tag and push). The user starts it by typing `/push` -
+do not run any of its steps yourself.

@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Templates for `CLAUDE.md`, `CHANGELOG.md`, `docs/HANDOVER.md` and the
   `## AA environment` block.
 
+- `/commit` ends by asking whether to run `/push` next, instead of only
+  mentioning it.
+
 ### Fixed
 
 - `/commit` and `/push` delete `.git/CLAUDE_COMMIT_MSG` after a successful
