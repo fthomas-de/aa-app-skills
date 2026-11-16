@@ -28,7 +28,7 @@ Two blocks drive this skill:
   context; a project's `CLAUDE.local.md` may override it.
 - **`## Release`** in the project's `CLAUDE.md` - the app: commands for
   version file, changelog section, tests, checks and translations. If the file is not in context yet, read
-  only that section (`grep -n "^## Release" -A 25 CLAUDE.md`).
+  only that section (`grep -n -A 25 ^##.Release CLAUDE.md`).
 
 If either block is missing, stop and suggest `/project-setup` - do not guess.
 
@@ -52,7 +52,7 @@ now**. Continue only on yes.
 ## 2 · Translations, if needed
 
 Needed when translatable texts are new or changed since the last commit
-(look through `git diff HEAD -- '*.py' '*.html'` for `gettext`, `translate`,
+(look through `git diff HEAD -- \*.py \*.html` for `gettext`, `translate`,
 `_(`). Otherwise skip the step and say so. If `Translations` says "none",
 the step does not apply.
 
@@ -103,7 +103,7 @@ Both files go into the commit below.
 4. Message: English, one subject line in the style of `git log --oneline -5`,
    below it briefly the why. End with the attribution line from the current
    session's system context, if there is one.
-5. Check `git log -1 --format="%h %s"`.
+5. Check `git log -1 --oneline`.
 
 ## 6 · Summary
 

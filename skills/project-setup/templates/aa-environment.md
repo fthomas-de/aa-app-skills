@@ -20,7 +20,9 @@ last two lines with:
 - Shell: `wsl.exe -d Ubuntu-22.04 -e bash -lc 'cd <dir> && <command>'` -
   git and every project command run inside WSL; never set `safe.directory`
   (git on the Windows path reports "dubious ownership"). Shell variables do
-  not survive the bridge: write commands out.
+  not survive the bridge: write commands out. Inner quotes do not survive
+  it either: a command containing `"`, `'` or `$(...)` goes into a script
+  file written with the Write tool and runs as `bash -l <path>`.
 - Files: `\\wsl.localhost\Ubuntu-22.04\home\<user>\...` for Read/Write/Edit
 
 A disposable database instead: "- Database: `<name>` - disposable".

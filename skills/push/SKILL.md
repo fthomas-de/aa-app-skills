@@ -72,7 +72,11 @@ Then tag that commit, so `pip install git+...@v<version>` works:
   refs/tags/v<version>` (must print nothing) and `git ls-remote --tags origin
   refs/tags/v<version>` (must print nothing). If it exists in either place,
   do not move, delete or overwrite it - show where it points and ask.
-- `git tag -a v<version> -m "Release <version>"` on the release commit.
+- Write `Release <version>` with the Write tool to
+  `<repo>/.git/CLAUDE_TAG_MSG`, then, in a later message,
+  `git tag -a v<version> -F .git/CLAUDE_TAG_MSG && rm .git/CLAUDE_TAG_MSG`
+  on the release commit. Never `-m "..."`: the PowerShell-to-WSL bridge drops
+  inner double quotes, and the tag message ends up as just `Release`.
 
 ## 3 · Push
 
@@ -81,7 +85,9 @@ First compare with the remote: `git fetch`, then
 <branch>` against `git rev-parse @{u}` (must match - a release can have been
 left behind locally). `git ls-remote --tags origin refs/tags/v<version>`
 must still print nothing; locally `v<version>` must point at the release
-commit (`git rev-parse v<version>^{commit}` equals `git rev-parse HEAD`).
+commit (`git rev-parse v<version>^{commit}` equals `git rev-parse HEAD`),
+and `git tag -n1 -l v<version>` must show `Release <version>` in full - if
+not, do not move or delete the tag, show it and ask.
 
 **Push without asking** when all of this holds:
 

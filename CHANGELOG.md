@@ -36,3 +36,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   commit and commit only once the Write succeeded. A leftover file made the
   Write fail ("File has not been read yet") and git committed the previous
   message.
+- `/push` writes the tag message to `.git/CLAUDE_TAG_MSG` and tags with
+  `-F`, and checks `git tag -n1` before pushing. With `-m "Release <version>"`
+  the PowerShell-to-WSL bridge dropped the inner quotes and the tag message
+  was only `Release`.
+- `/commit` uses quote-free commands (`git log -1 --oneline`, unquoted
+  `grep` and `git diff` patterns), which pass through `bash -lc '...'`
+  unchanged; the `## AA environment` template says to put commands with
+  quotes or `$(...)` into a script file.
